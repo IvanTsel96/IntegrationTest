@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Web.API.Domain;
+using Web.API.Exceptions;
 using Web.API.Infrastructure.Repositories.Records;
 using Web.API.Services.Records.Models;
 
@@ -30,7 +31,7 @@ namespace Web.API.Services.Records
 
             if (record == null)
             {
-                throw new ApplicationException($"Запись с ID: {id} не найдена");
+                throw new ResourceNotFoundException($"Запись с ID: {id} не найдена");
             }
 
             return MapToRecordResponse(record);
@@ -53,7 +54,7 @@ namespace Web.API.Services.Records
 
             if (existingRecord == null)
             {
-                throw new ApplicationException($"Запись с ID: {id} не найдена");
+                throw new ResourceNotFoundException($"Запись с ID: {id} не найдена");
             }
 
             existingRecord.Name = request.Name;
@@ -68,7 +69,7 @@ namespace Web.API.Services.Records
 
             if (record == null)
             {
-                throw new ApplicationException($"Запись с ID: {id} не найдена");
+                throw new ResourceNotFoundException($"Запись с ID: {id} не найдена");
             }
 
             await _recordRepository.Delete(record);

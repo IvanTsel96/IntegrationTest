@@ -12,7 +12,7 @@ namespace Web.API.Infrastructure.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    name = table.Column<string>(type: "character varying(125)", maxLength: 125, nullable: true),
+                    name = table.Column<string>(type: "character varying(125)", maxLength: 125, nullable: false),
                     description = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: true)
                 },
                 constraints: table =>

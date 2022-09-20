@@ -10,7 +10,7 @@ using Web.API.Infrastructure;
 namespace Web.API.Infrastructure.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20220919150835_InitMigration")]
+    [Migration("20220920172129_InitMigration")]
     partial class InitMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,6 +34,7 @@ namespace Web.API.Infrastructure.Migrations
                         .HasColumnName("description");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasMaxLength(125)
                         .HasColumnType("character varying(125)")
                         .HasColumnName("name");

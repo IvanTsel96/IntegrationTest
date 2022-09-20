@@ -32,6 +32,7 @@ namespace Web.API.Infrastructure.Migrations
                         .HasColumnName("description");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasMaxLength(125)
                         .HasColumnType("character varying(125)")
                         .HasColumnName("name");

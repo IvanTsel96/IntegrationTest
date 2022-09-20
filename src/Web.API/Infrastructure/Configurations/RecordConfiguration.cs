@@ -13,6 +13,7 @@ namespace Web.API.Infrastructure.Configurations
 
             builder
                 .Property(x => x.Name)
+                .IsRequired()
                 .HasMaxLength(125);
 
             builder

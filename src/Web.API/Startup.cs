@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Web.API.Extensions;
 using Web.API.Infrastructure.Extensions;
 
 namespace Web.API
@@ -33,7 +34,7 @@ namespace Web.API
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseExceptionMiddleware();
 
             app.UseEndpoints(endpoints =>
             {
