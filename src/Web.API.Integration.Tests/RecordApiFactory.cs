@@ -2,10 +2,9 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Hosting;
 using System.Linq;
-using Web.API.Domain;
-using Web.API.Infrastructure;
 using Web.API.Integration.Tests.Extensions;
 using Web.API.Integration.Tests.Mock;
+using Record = Web.API.Domain.Record;
 
 namespace Web.API.Integration.Tests
 {
@@ -13,15 +12,16 @@ namespace Web.API.Integration.Tests
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            builder.ConfigureServices(service =>
+            builder.ConfigureServices(services =>
             {
-                // Remove the follow comments to test with in memory database
+                // Use for test with memory database
+                // services.UseInMemoryDbContext<DatabaseContext>();
 
-                //service.RemoveDbContext();
+                // Use for test with container database and
+                // This class should inherit from ContainerWebApplicationFactory
+                // services.UseContainerDbContext<DatabaseContext>(DatabaseContainer);
 
-                //service.AddInMemoryDbContext<DatabaseContext>();
-
-                service.SeedDatabase(context =>
+                services.SeedDatabase(context =>
                 {
                     if (!context.Set<Record>().Any(x => x.Id == RecordMockHelper.IdToGet))
                     {

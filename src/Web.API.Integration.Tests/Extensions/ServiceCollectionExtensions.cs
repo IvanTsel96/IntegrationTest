@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DotNet.Testcontainers.Containers;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
@@ -10,21 +11,22 @@ namespace Web.API.Integration.Tests.Extensions
     {
         private static readonly object Lock = new();
 
-        internal static IServiceCollection RemoveDbContext(this IServiceCollection services)
+        internal static IServiceCollection UseInMemoryDbContext<T>(this IServiceCollection services)
+            where T : DbContext
         {
-            var dbContext = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<DatabaseContext>));
+            services.RemoveDbContext<T>();
 
-            if (dbContext != null)
-            {
-                services.Remove(dbContext);
-            }
+            services.AddDbContext<T>(options => options.UseInMemoryDatabase("InMemoryRecords"));
 
             return services;
         }
 
-        internal static IServiceCollection AddInMemoryDbContext<T>(this IServiceCollection services) where T : DbContext
+        internal static IServiceCollection UseContainerDbContext<T>(this IServiceCollection services, PostgreSqlTestcontainer container)
+            where T : DbContext
         {
-            services.AddDbContext<T>(options => options.UseInMemoryDatabase("InMemoryRecords"));
+            services.RemoveDbContext<T>();
+
+            services.AddDbContext<T>(options => options.UseNpgsql(container.ConnectionString));
 
             return services;
         }
@@ -42,5 +44,19 @@ namespace Web.API.Integration.Tests.Extensions
                 context.SaveChanges();
             }
         }
+
+        private static IServiceCollection RemoveDbContext<T>(this IServiceCollection services)
+            where T : DbContext
+        {
+            var dbContext = services.SingleOrDefault(d => d.ServiceType == typeof(T));
+
+            if (dbContext != null)
+            {
+                services.Remove(dbContext);
+            }
+
+            return services;
+        }
+
     }
 }
