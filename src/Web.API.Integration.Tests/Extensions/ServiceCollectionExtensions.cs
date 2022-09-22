@@ -48,7 +48,7 @@ namespace Web.API.Integration.Tests.Extensions
         private static IServiceCollection RemoveDbContext<T>(this IServiceCollection services)
             where T : DbContext
         {
-            var dbContext = services.SingleOrDefault(d => d.ServiceType == typeof(T));
+            var dbContext = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<T>));
 
             if (dbContext != null)
             {
@@ -57,6 +57,5 @@ namespace Web.API.Integration.Tests.Extensions
 
             return services;
         }
-
     }
 }
