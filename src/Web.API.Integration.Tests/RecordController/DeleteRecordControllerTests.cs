@@ -1,7 +1,10 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Web.API.Integration.Tests.Extensions;
 using Web.API.Integration.Tests.Mock;
 using Xunit;
 
@@ -13,7 +16,10 @@ namespace Web.API.Integration.Tests.RecordController
 
         public DeleteRecordControllerTests(RecordApiFactory recordApiFactory)
         {
-            _httpClient = recordApiFactory.CreateClient();
+            _httpClient = recordApiFactory
+                .WithWebHostBuilder(builder => builder
+                    .ConfigureServices(services => services.SeedDatabase(SeedDeleteRecordDatabase)))
+                .CreateClient();
         }
 
         [Fact]
@@ -42,6 +48,14 @@ namespace Web.API.Integration.Tests.RecordController
             // Assert
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             Assert.Contains($"Запись с ID: {id} не найдена", responseAsString);
+        }
+
+        private static void SeedDeleteRecordDatabase(DbContext context)
+        {
+            if (!context.Set<Domain.Record>().Any(x => x.Id == RecordMockHelper.IdToDelete))
+            {
+                context.Add(RecordMockHelper.GetRecord(RecordMockHelper.IdToDelete, "DELETE"));
+            }
         }
     }
 }
